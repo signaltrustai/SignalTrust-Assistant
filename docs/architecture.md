@@ -151,7 +151,7 @@ memory/
 
 The index supports three access patterns:
 
-1. **Key lookup** — Direct retrieval by unique key (`O(1)` via JSON index).
+1. **Key lookup** — Fast direct retrieval by unique key via JSON index.
 2. **Tag-based filtering** — List all entries matching one or more tags.
 3. **Full-text search** — Substring and keyword search across all stored content. Future versions will support semantic search via embeddings and a vector store.
 
@@ -355,7 +355,7 @@ The module wraps the GitHub REST API to provide:
 | Pull requests | `GET /repos/{owner}/{repo}/pulls` | PR status, reviews, merge state |
 | Workflow runs | `GET /repos/{owner}/{repo}/actions/runs` | CI/CD pipeline status |
 
-Authentication is handled via a GitHub personal access token stored in the `GITHUB_TOKEN` environment variable. All API calls include proper error handling, rate-limit awareness, and response caching.
+Authentication is handled via a GitHub personal access token stored in the `GITHUB_TOKEN` environment variable. Planned capabilities include proper error handling, rate-limit awareness, and response caching.
 
 ### 8.2 Future Integrations
 
@@ -463,7 +463,7 @@ Configuration is managed through YAML and JSON files in the `config/` directory:
 - **`config/projects.yaml`** — Project registry with metadata.
 - **`config/settings.yaml`** (future) — User preferences, default behaviors, API keys reference.
 
-All configuration is version-controlled. Sensitive values (API tokens) are stored in environment variables, never in config files.
+All configuration is version-controlled. Sensitive values (API tokens) are stored in environment variables, never in config files. For production and autonomous operation, a dedicated secret management solution (e.g., encrypted environment files, vault services) is recommended.
 
 ---
 
