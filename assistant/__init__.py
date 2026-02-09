@@ -10,6 +10,8 @@ import json
 from typing import Any
 
 from assistant import memory, tasks, scripts, projects, ecosystem
+from assistant.ai import agent as ai_agent
+from assistant.ai.client import ask_ai
 
 
 def _print(obj: Any, as_json: bool = False) -> None:
@@ -73,6 +75,26 @@ def main() -> None:
     eco_commits.add_argument("repo")
     eco_commits.add_argument("--n", type=int, default=10)
 
+    # ai
+    ai_parser = subparsers.add_parser("ai")
+    ai_sub = ai_parser.add_subparsers(dest="command", required=True)
+
+    ai_ask = ai_sub.add_parser("ask")
+    ai_ask.add_argument("prompt")
+
+    ai_summarize = ai_sub.add_parser("summarize")
+    ai_summarize.add_argument("text")
+
+    ai_analyze = ai_sub.add_parser("analyze")
+    ai_analyze.add_argument("text")
+
+    ai_codegen = ai_sub.add_parser("codegen")
+    ai_codegen.add_argument("description")
+
+    ai_improve = ai_sub.add_parser("improve-memory")
+    ai_improve.add_argument("key")
+    ai_improve.add_argument("content")
+
     args = parser.parse_args()
     as_json = getattr(args, "json", False)
 
@@ -115,6 +137,18 @@ def main() -> None:
             _print(ecosystem.list_open_issues(args.repo), as_json)
         elif args.command == "commits":
             _print(ecosystem.list_recent_commits(args.repo, args.n), as_json)
+
+    elif args.module == "ai":
+        if args.command == "ask":
+            _print(ask_ai(args.prompt), as_json=False)
+        elif args.command == "summarize":
+            _print(ai_agent.summarize(args.text), as_json=False)
+        elif args.command == "analyze":
+            _print(ai_agent.analyze(args.text), as_json=False)
+        elif args.command == "codegen":
+            _print(ai_agent.generate_code(args.description), as_json=False)
+        elif args.command == "improve-memory":
+            _print(ai_agent.improve_memory_entry(args.key, args.content), as_json=False)
 
 
 if __name__ == "__main__":
