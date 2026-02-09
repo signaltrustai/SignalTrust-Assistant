@@ -12,6 +12,7 @@ from typing import Any
 from assistant import memory, tasks, scripts, projects, ecosystem
 from assistant.ai import agent as ai_agent
 from assistant.ai.client import ask_ai
+from assistant.agents.focus_agent import FocusAgent
 
 
 def _print(obj: Any, as_json: bool = False) -> None:
@@ -95,6 +96,13 @@ def main() -> None:
     ai_improve.add_argument("key")
     ai_improve.add_argument("content")
 
+    # agent
+    agent_parser = subparsers.add_parser("agent")
+    agent_sub = agent_parser.add_subparsers(dest="command", required=True)
+
+    agent_focus = agent_sub.add_parser("focus")
+    agent_focus.add_argument("--file", default="todo-v1.md")
+
     args = parser.parse_args()
     as_json = getattr(args, "json", False)
 
@@ -149,6 +157,12 @@ def main() -> None:
             _print(ai_agent.generate_code(args.description), as_json=False)
         elif args.command == "improve-memory":
             _print(ai_agent.improve_memory_entry(args.key, args.content), as_json=False)
+
+    elif args.module == "agent":
+        if args.command == "focus":
+            agent = FocusAgent(task_file=args.file)
+            result = agent.run()
+            _print(result, as_json)
 
 
 if __name__ == "__main__":
