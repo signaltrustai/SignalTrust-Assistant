@@ -1,6 +1,8 @@
-elif args.module == "agent":
-    if args.command == "focus":
-        from assistant.agents.focus_agent import FocusAgent
-        agent = FocusAgent()
-        result = agent.run()
-        _print(result, as_json)
+"""OmniJARVIS CLI — Entry point when run as ``python -m assistant.cli``."""
+
+import sys
+
+from assistant.cli import main
+
+if __name__ == "__main__":
+    sys.exit(main())
