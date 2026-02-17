@@ -85,7 +85,8 @@ class SystemAgent(BaseAgent):
 
     def _disk_usage(self) -> AgentResult:
         """Return disk space information for the root partition."""
-        usage = shutil.disk_usage("/")
+        root = Path.home().anchor or "/"
+        usage = shutil.disk_usage(root)
         data = {
             "total_gb": round(usage.total / (1024 ** 3), 2),
             "used_gb": round(usage.used / (1024 ** 3), 2),

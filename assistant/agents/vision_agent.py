@@ -16,7 +16,7 @@ def _openai_available() -> bool:
     """Return ``True`` if the ``openai`` package can be imported."""
     try:
         import openai  # noqa: F401
-        return bool(openai.api_key or True)
+        return bool(openai.api_key)
     except Exception:
         return False
 
