@@ -1,0 +1,83 @@
+assistant_name: OmniJARVIS
+version: "1.0.0"
+language: fr
+mode: personal_os
+
+memory:
+  backend: "json"
+  path: "memory/omnijarvis_store.json"
+
+learning:
+  profile_path: "config/user_profile.json"
+  history_path: "memory/interaction_history.json"
+
+permissions:
+  file: "config/permissions.json"
+  default_scope: "session"
+
+agents:
+  executive:
+    enabled: true
+    description: "Interprets requests, decomposes tasks, assigns to agents"
+  memory:
+    enabled: true
+    description: "Long-term context storage, recall, and summaries"
+  analysis:
+    enabled: true
+    description: "Analyses files, code, documents, data"
+  system:
+    enabled: true
+    description: "System-level actions, file ops, process management"
+  documentation:
+    enabled: true
+    description: "Writes docs, changelogs, reports, structured summaries"
+  code:
+    enabled: true
+    description: "Code generation, modification, review, and execution"
+  communication:
+    enabled: true
+    description: "Messaging, email drafts, meeting scheduling"
+  cloud:
+    enabled: true
+    description: "Cloud services, file sync, backup management"
+  vision:
+    enabled: true
+    description: "Image analysis, text extraction, scene description"
+  mobility:
+    enabled: true
+    description: "Multi-device coordination (phone, watch, glasses, IoT)"
+  productivity:
+    enabled: true
+    description: "Workflow automation, routines, daily summaries"
+  security:
+    enabled: true
+    description: "Security monitoring, audit logging, config scanning"
+
+router:
+  threshold: 0.1
+  fallback_agent: "executive"
+
+workflow:
+  steps:
+    - "Identify intent"
+    - "Decompose into tasks"
+    - "Assign to agents"
+    - "Reason and execute"
+    - "Produce structured answer"
+    - "Update memory when relevant"
+
+output_format:
+  - "Summary"
+  - "Steps taken (by which agents)"
+  - "Result"
+  - "Suggested next actions"
+
+principles:
+  - "Think step-by-step, but keep outputs concise and structured"
+  - "Always clarify intent when ambiguous"
+  - "Always propose improvements or next steps"
+  - "Always document important decisions and context"
+  - "Always optimize for cognitive load: less chaos, more clarity"
+  - "User always keeps control"
+  - "Every action requires explicit permission"
+  - "Security and transparency are priorities"

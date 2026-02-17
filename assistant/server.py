@@ -1,16 +1,8 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from assistant.ai.client import ask_ai
+"""
+OmniJARVIS — FastAPI app re-export.
 
-app = FastAPI(title="SignalTrust Assistant API")
+This module re-exports the app from assistant.web.server for backward
+compatibility.
+"""
 
-class ChatRequest(BaseModel):
-    prompt: str
-
-class ChatResponse(BaseModel):
-    response: str
-
-@app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
-    answer = ask_ai(req.prompt)
-    return ChatResponse(response=answer)
+from assistant.web.server import app  # noqa: F401
