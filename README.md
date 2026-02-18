@@ -81,7 +81,7 @@ cd SignalTrust-Assistant
 python3 -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
-export OPENAI_API_KEY="your-key-here"  # Optionnel, pour les fonctionnalités IA
+export GROQ_API_KEY="your-key-here"  # Optionnel, pour les fonctionnalités IA
 ```
 
 ### Utilisation CLI

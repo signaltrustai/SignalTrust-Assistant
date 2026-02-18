@@ -533,7 +533,7 @@ Key architectural decisions that enable this evolution:
 | Scripting targets | PowerShell, Python, Bash, GitHub Actions |
 | API integration | GitHub REST API, `requests` / `httpx` |
 | Testing | `pytest` |
-| Future: LLM | OpenAI API, local models (llama.cpp) |
+| Future: LLM | Groq API (llama3-70b-8192), local models (llama.cpp) |
 | Future: Search | Vector embeddings, FAISS or ChromaDB |
 
 ---
