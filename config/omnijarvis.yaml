@@ -3,6 +3,11 @@ version: "1.0.0"
 language: fr
 mode: personal_os
 
+ai:
+  provider: groq
+  model: llama3-70b-8192
+  temperature: 0.7
+
 memory:
   backend: "json"
   path: "memory/omnijarvis_store.json"

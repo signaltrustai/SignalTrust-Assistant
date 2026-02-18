@@ -1,7 +1,7 @@
 """
 AI integration module for SignalTrust Assistant.
 
-Provides AI-powered features using the OpenAI API.
+Provides AI-powered features using the Groq API.
 """
 
 from assistant.ai.client import ask_ai, load_api_key

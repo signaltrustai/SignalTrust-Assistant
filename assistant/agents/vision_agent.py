@@ -1,9 +1,10 @@
-"""Vision agent – image analysis, text extraction, and scene description via GPT-4o."""
+"""Vision agent – image analysis, text extraction, and scene description via Groq."""
 
 from __future__ import annotations
 
 import base64
 import mimetypes
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -12,11 +13,11 @@ from assistant.agents.base_agent import BaseAgent, AgentResult
 _ACTIONS: List[str] = ["analyze_image", "extract_text", "describe_scene"]
 
 
-def _openai_available() -> bool:
-    """Return ``True`` if the ``openai`` package can be imported."""
+def _groq_available() -> bool:
+    """Return ``True`` if the ``groq`` package can be imported and an API key is set."""
     try:
-        import openai  # noqa: F401
-        return bool(openai.api_key)
+        from groq import Groq  # noqa: F401
+        return bool(os.environ.get("GROQ_API_KEY"))
     except Exception:
         return False
 
@@ -62,11 +63,11 @@ class VisionAgent(BaseAgent):
         return None
 
     def _analyze_image(self, image_path: str) -> AgentResult:
-        """Analyse an image using GPT-4o vision or return a placeholder."""
+        """Analyse an image using Groq vision or return a placeholder."""
         err = self._validate_image(image_path)
         if err:
             return err
-        if _openai_available():
+        if _groq_available():
             return self._call_vision_api(image_path, "Analyze this image in detail.")
         return AgentResult(
             agent_name=self.name, status="success",
@@ -74,7 +75,7 @@ class VisionAgent(BaseAgent):
             data={"image_path": image_path,
                    "file_size_bytes": Path(image_path).stat().st_size,
                    "mime_type": mimetypes.guess_type(image_path)[0],
-                   "analysis": "AI analysis unavailable — configure OpenAI API key."},
+                   "analysis": "AI analysis unavailable — configure GROQ_API_KEY."},
             actions_taken=["analyze_image_placeholder"])
 
     def _extract_text(self, image_path: str) -> AgentResult:
@@ -82,14 +83,14 @@ class VisionAgent(BaseAgent):
         err = self._validate_image(image_path)
         if err:
             return err
-        if _openai_available():
+        if _groq_available():
             return self._call_vision_api(
                 image_path, "Extract all visible text from this image. Return only the text.")
         return AgentResult(
             agent_name=self.name, status="success",
             message="Text extraction placeholder (no AI backend configured).",
             data={"image_path": image_path, "extracted_text": "",
-                   "note": "AI text extraction unavailable — configure OpenAI API key."},
+                   "note": "AI text extraction unavailable — configure GROQ_API_KEY."},
             actions_taken=["extract_text_placeholder"])
 
     def _describe_scene(self, image_path: str) -> AgentResult:
@@ -97,26 +98,26 @@ class VisionAgent(BaseAgent):
         err = self._validate_image(image_path)
         if err:
             return err
-        if _openai_available():
+        if _groq_available():
             return self._call_vision_api(
                 image_path, "Describe this scene in detail, noting objects, people, and context.")
         return AgentResult(
             agent_name=self.name, status="success",
             message="Scene description placeholder (no AI backend configured).",
             data={"image_path": image_path,
-                   "description": "AI scene description unavailable — configure OpenAI API key."},
+                   "description": "AI scene description unavailable — configure GROQ_API_KEY."},
             actions_taken=["describe_scene_placeholder"])
 
     def _call_vision_api(self, image_path: str, prompt: str) -> AgentResult:
-        """Send an image to the OpenAI GPT-4o vision endpoint."""
-        import openai
+        """Send an image to the Groq vision endpoint."""
+        from groq import Groq
         path = Path(image_path)
         mime = mimetypes.guess_type(image_path)[0] or "image/png"
         encoded = base64.b64encode(path.read_bytes()).decode()
         data_uri = f"data:{mime};base64,{encoded}"
-        client = openai.OpenAI()
+        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="llama-3.2-90b-vision-preview",
             messages=[{"role": "user", "content": [
                 {"type": "text", "text": prompt},
                 {"type": "image_url", "image_url": {"url": data_uri}},
@@ -127,5 +128,5 @@ class VisionAgent(BaseAgent):
         return AgentResult(
             agent_name=self.name, status="success",
             message="Vision analysis complete.",
-            data={"image_path": image_path, "result": result_text, "model": "gpt-4o"},
+            data={"image_path": image_path, "result": result_text, "model": "llama-3.2-90b-vision-preview"},
             actions_taken=["vision_api_call"])
